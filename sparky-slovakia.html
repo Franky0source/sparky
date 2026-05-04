@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sparky Slovakia s. r. o.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD600;
+    --yellow-dark: #C9A900;
+    --black: #111111;
+    --white: #FAFAFA;
+    --gray: #888;
+    --surface: #1a1a1a;
+    --text: #FAFAFA;
+    --text-muted: #aaa;
+    --bg: #111111;
+    --card-bg: #1e1e1e;
+    --border: rgba(255,214,0,0.15);
+    --navbar-bg: rgba(17,17,17,0.95);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --black: #111111;
+      --white: #FAFAFA;
+      --surface: #f0f0f0;
+      --text: #111111;
+      --text-muted: #555;
+      --bg: #FAFAFA;
+      --card-bg: #ffffff;
+      --border: rgba(17,17,17,0.12);
+      --navbar-bg: rgba(250,250,250,0.95);
+    }
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAVBAR ─── */
+  #navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: var(--navbar-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transform: translateY(0);
+    transition: transform 0.35s cubic-bezier(.4,0,.2,1), box-shadow 0.3s;
+  }
+  #navbar.hidden { transform: translateY(-100%); }
+
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    color: var(--yellow);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo span { color: var(--text); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255,214,0,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-stripe {
+    position: absolute;
+    left: -10%;
+    top: 55%;
+    width: 120%;
+    height: 3px;
+    background: var(--yellow);
+    opacity: 0.07;
+    transform: rotate(-3deg);
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 800px; }
+
+  .hero-tag {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    line-height: 0.92;
+    letter-spacing: 0.03em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em {
+    font-style: normal;
+    color: var(--yellow);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    background: var(--yellow);
+    color: var(--black);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 14px 36px;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,214,0,0.25); }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: var(--yellow);
+    opacity: 0.4;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    padding: 6rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    letter-spacing: 0.04em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+    line-height: 1;
+  }
+
+  /* ─── O NÁS ─── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-text p {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-size: 1.05rem;
+    font-weight: 300;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--yellow);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .stat-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── SLUŽBY ─── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .service-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--yellow);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .service-card:hover {
+    border-color: rgba(255,214,0,0.4);
+    transform: translateY(-4px);
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255,214,0,0.1);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.4rem;
+  }
+
+  .service-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .service-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ─── KONTAKT ─── */
+  #contact { text-align: center; }
+
+  .contact-sub {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    font-weight: 300;
+  }
+
+  .contact-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .contact-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+  .btn-whatsapp {
+    background: #25D366;
+    color: #fff;
+  }
+  .btn-phone {
+    background: var(--yellow);
+    color: var(--black);
+  }
+  .btn-instagram {
+    background: linear-gradient(135deg, #E1306C, #833AB4);
+    color: #fff;
+  }
+
+  .contact-btn svg {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  footer strong { color: var(--yellow); }
+
+  /* ─── COOKIES BANNER ─── */
+  #cookie-banner {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 9999;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 -4px 30px rgba(0,0,0,0.15);
+    animation: slideUp 0.4s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .cookie-text {
+    flex: 1;
+    min-width: 200px;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+  .cookie-text strong { color: var(--text); }
+
+  .cookie-btns {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .btn-accept {
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    padding: 10px 22px;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .btn-accept:hover { opacity: 0.88; transform: scale(1.02); }
+
+  .btn-decline {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 10px 22px;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-decline:hover { border-color: var(--text-muted); color: var(--text); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 700px) {
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .nav-links { display: none; }
+    #cookie-banner { flex-direction: column; align-items: flex-start; }
+    .cookie-btns { width: 100%; }
+    .btn-accept, .btn-decline { flex: 1; }
+    .contact-buttons { flex-direction: column; align-items: center; }
+    .contact-btn { width: 100%; max-width: 320px; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">⚡ Sparky<span>&nbsp;Slovakia</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">O nás</a></li>
+      <li><a href="#services">Služby</a></li>
+      <li><a href="#contact">Kontakt</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-stripe"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Profesionálne elektroinštalácie</div>
+    <h1 class="hero-title">Sparky<br><em>Slovakia</em></h1>
+    <p class="hero-sub">Spoľahlivé elektroinštalačné práce na Slovensku. Kvalita, rýchlosť a bezpečnosť na prvom mieste.</p>
+    <a href="#contact" class="hero-cta">Kontaktujte nás</a>
+  </div>
+  <div class="scroll-hint">Scrolluj</div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- O NÁS -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <div class="section-label">O nás</div>
+      <h2 class="section-title">Kto sme</h2>
+      <p>Sme slovenská spoločnosť so skúsenosťami v oblasti elektroinštalácií a elektrotechnických prác. Naším cieľom je poskytovať kvalitné a spoľahlivé služby každému zákazníkovi.</p>
+      <p>Pracujeme s moderným vybavením a dodržiavame všetky platné normy a predpisy. Každý projekt berieme vážne — od malých opráv až po komplexné inštalácie.</p>
+      <p>Verí nám domácnosti aj firmy po celom Slovensku.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">Rokov skúseností</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Dokončených projektov</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Spokojnosť zákazníkov</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Dostupnosť pre havárie</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SLUŽBY -->
+<section id="services">
+  <div class="section-label">Čo robíme</div>
+  <h2 class="section-title">Naše služby</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <div class="service-title">Elektroinštalácie</div>
+      <p class="service-desc">Kompletné elektroinštalačné práce v rodinných domoch, bytoch aj komerčných priestoroch. Nové rozvody, rekonštrukcie, revízie.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔌</div>
+      <div class="service-title">Rozvádzače a istenie</div>
+      <p class="service-desc">Montáž a oprava elektrických rozvádzačov, výmena ističov, inštalácia chráničov a prepäťových ochrán.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💡</div>
+      <div class="service-title">Osvetlenie</div>
+      <p class="service-desc">Návrh a inštalácia osvetľovacích sústav — interiér aj exteriér. LED riešenia, úspora energie, inteligentné ovládanie.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏗️</div>
+      <div class="service-title">Priemyselné práce</div>
+      <p class="service-desc">Elektroinštalácie v priemyselných prevádzkach, strojové napájanie, riadiace systémy, kabeláž.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛡️</div>
+      <div class="service-title">Revízie a certifikácie</div>
+      <p class="service-desc">Odborné revízie elektrických zariadení, výstupné správy a certifikáty v súlade s platnou legislatívou SR.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚨</div>
+      <div class="service-title">Havarijné zásahy</div>
+      <p class="service-desc">Rýchle riešenie havarijných stavov — výpadky, skraty, poruchy. Dostupní kedykoľvek to potrebujete.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- KONTAKT -->
+<section id="contact">
+  <div class="section-label">Kontakt</div>
+  <h2 class="section-title">Kontaktujte nás</h2>
+  <p class="contact-sub">Nezáväzná konzultácia je vždy zadarmo. Napíšte nám alebo zavolajte — odpoviete čo najskôr.</p>
+  <div class="contact-buttons">
+    <a href="https://wa.me/421900000000" class="contact-btn btn-whatsapp" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+    <a href="tel:+421900000000" class="contact-btn btn-phone">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .91h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+      +421 900 000 000
+    </a>
+    <a href="https://www.instagram.com/sparkyslova" class="contact-btn btn-instagram" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      Instagram
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2025 <strong>Sparky Slovakia s. r. o.</strong> — Všetky práva vyhradené.</p>
+</footer>
+
+<!-- COOKIE BANNER -->
+<div id="cookie-banner">
+  <div class="cookie-text">
+    <strong>🍪 Cookies</strong> — Táto stránka môže používať cookies na zlepšenie vášho zážitku. Môžete všetky prijať alebo odmietnuť.
+  </div>
+  <div class="cookie-btns">
+    <button class="btn-decline" onclick="closeCookies('decline')">Odmietnuť všetko</button>
+    <button class="btn-accept" onclick="closeCookies('accept')">Prijať všetko</button>
+  </div>
+</div>
+
+<script>
+  // ── Navbar hide/show on scroll ──
+  const navbar = document.getElementById('navbar');
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        if (currentY > lastY && currentY > 80) {
+          navbar.classList.add('hidden');
+        } else {
+          navbar.classList.remove('hidden');
+        }
+        lastY = currentY;
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // ── Cookie banner ──
+  function closeCookies(choice) {
+    const banner = document.getElementById('cookie-banner');
+    banner.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+    banner.style.transform = 'translateY(100%)';
+    banner.style.opacity = '0';
+    setTimeout(() => banner.remove(), 380);
+    try { localStorage.setItem('cookie-choice', choice); } catch(e) {}
+  }
+
+  try {
+    if (localStorage.getItem('cookie-choice')) {
+      document.getElementById('cookie-banner').remove();
+    }
+  } catch(e) {}
+</script>
+</body>
+</html>
